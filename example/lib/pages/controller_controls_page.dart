@@ -16,11 +16,25 @@ class _ControllerControlsPageState extends State<ControllerControlsPage> {
         BetterPlayerConfiguration(
       aspectRatio: 16 / 9,
       fit: BoxFit.contain,
+      controlsConfiguration: BetterPlayerControlsConfiguration(
+        playerTheme: BetterPlayerTheme.material,
+        enablePlayPause: false,
+        enableMute: false,
+        enableOverflowMenu: false,
+        playIcon: Icons.play_arrow,
+        pauseIcon: Icons.pause,
+      ),
     );
     BetterPlayerDataSource dataSource = BetterPlayerDataSource(
         BetterPlayerDataSourceType.network, Constants.elephantDreamVideoUrl);
     _betterPlayerController = BetterPlayerController(betterPlayerConfiguration);
     _betterPlayerController.setupDataSource(dataSource);
+    // _betterPlayerController.addEventsListener((event) {
+    //   print('betterPlayerControllerevent ${event.betterPlayerEventType}');
+    //   if (event.betterPlayerEventType == BetterPlayerEventType.play) {
+    //     _betterPlayerController.setControlsVisibility(false);
+    //   }
+    // });
     super.initState();
   }
 
