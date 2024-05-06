@@ -127,6 +127,7 @@ class _VideoProgressBarState
           color: Colors.transparent,
           child: CustomPaint(
             painter: _ProgressBarPainter(
+              widget.betterPlayerController,
               _getValue(),
               widget.colors,
             ),
@@ -163,13 +164,19 @@ class _VideoProgressBarState
       final Offset tapPos = box.globalToLocal(globalPosition);
       final double relative = tapPos.dx / box.size.width;
       if (relative > 0) {
-        final Duration position = controller!.value.duration! * relative;
+        final duration = widget.betterPlayerController?
+                .betterPlayerControlsConfiguration?.overrideTotalDuration ??
+            controller!.value.duration!;
+        final Duration position = duration * relative;
         lastSeek = position;
         await betterPlayerController!.seekTo(position);
         onFinishedLastSeek();
         if (relative >= 1) {
-          lastSeek = controller!.value.duration;
-          await betterPlayerController!.seekTo(controller!.value.duration!);
+          final duration = widget.betterPlayerController?
+                .betterPlayerControlsConfiguration?.overrideTotalDuration ??
+            controller!.value.duration!;
+          lastSeek = duration;
+          await betterPlayerController!.seekTo(duration);
           onFinishedLastSeek();
         }
       }
@@ -185,8 +192,9 @@ class _VideoProgressBarState
 }
 
 class _ProgressBarPainter extends CustomPainter {
-  _ProgressBarPainter(this.value, this.colors);
+  _ProgressBarPainter(this.betterPlayerController, this.value, this.colors);
 
+  BetterPlayerController? betterPlayerController;
   VideoPlayerValue value;
   BetterPlayerProgressColors colors;
 
@@ -212,19 +220,20 @@ class _ProgressBarPainter extends CustomPainter {
     if (!value.initialized) {
       return;
     }
+    final duration = betterPlayerController.betterPlayerControlsConfiguration.overrideTotalDuration ??  value.duration!;
     double playedPartPercent =
-        value.position.inMilliseconds / value.duration!.inMilliseconds;
+        value.position.inMilliseconds / duration.inMilliseconds;
     if (playedPartPercent.isNaN) {
       playedPartPercent = 0;
     }
     final double playedPart =
         playedPartPercent > 1 ? size.width : playedPartPercent * size.width;
     for (final DurationRange range in value.buffered) {
-      double start = range.startFraction(value.duration!) * size.width;
+      double start = range.startFraction(duration) * size.width;
       if (start.isNaN) {
         start = 0;
       }
-      double end = range.endFraction(value.duration!) * size.width;
+      double end = range.endFraction(duration) * size.width;
       if (end.isNaN) {
         end = 0;
       }
