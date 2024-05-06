@@ -586,7 +586,7 @@ class _BetterPlayerMaterialControlsState
             ),
             children: <TextSpan>[
               TextSpan(
-                text: ' / ${BetterPlayerUtils.formatDuration(duration)}',
+                text: ' / ${BetterPlayerUtils.formatDuration(widget.controlsConfiguration.overrideTotalDuration ?? duration)}',
                 style: TextStyle(
                   fontSize: 10.0,
                   color: _controlsConfiguration.textColor,
