@@ -164,17 +164,17 @@ class _VideoProgressBarState
       final Offset tapPos = box.globalToLocal(globalPosition);
       final double relative = tapPos.dx / box.size.width;
       if (relative > 0) {
-        final duration = widget.betterPlayerController?
-                .betterPlayerControlsConfiguration?.overrideTotalDuration ??
+        final duration = widget.betterPlayerController
+                ?.betterPlayerControlsConfiguration.overrideTotalDuration ??
             controller!.value.duration!;
         final Duration position = duration * relative;
         lastSeek = position;
         await betterPlayerController!.seekTo(position);
         onFinishedLastSeek();
         if (relative >= 1) {
-          final duration = widget.betterPlayerController?
-                .betterPlayerControlsConfiguration?.overrideTotalDuration ??
-            controller!.value.duration!;
+          final duration = widget.betterPlayerController
+                  ?.betterPlayerControlsConfiguration.overrideTotalDuration ??
+              controller!.value.duration!;
           lastSeek = duration;
           await betterPlayerController!.seekTo(duration);
           onFinishedLastSeek();
@@ -220,7 +220,10 @@ class _ProgressBarPainter extends CustomPainter {
     if (!value.initialized) {
       return;
     }
-    final duration = betterPlayerController.betterPlayerControlsConfiguration.overrideTotalDuration ??  value.duration!;
+
+    final duration = betterPlayerController
+            ?.betterPlayerControlsConfiguration.overrideTotalDuration ??
+        value.duration!;
     double playedPartPercent =
         value.position.inMilliseconds / duration.inMilliseconds;
     if (playedPartPercent.isNaN) {
